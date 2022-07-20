@@ -1,0 +1,59 @@
+﻿:root {
+    --green: #00FF00;
+    --white: #FFFFFF;
+    --black: #000000;
+    --background: url('https://img.freepik.com/free-photo/white-texture_1160-786.jpg?w=2000')
+}
+body {
+    background: var(--black);
+    color: var(--white);
+    font-family: helvetica;
+    background-image: var(--background);
+}
+
+.note {
+    color: var(--black);
+    background-color: var(--white);
+    position: absolute;
+}
+.to-do {
+    color: var(--black);
+    background-color: var(--white);
+    position: absolute;
+    top: 60px;
+}
+
+.text-input {
+    color: var(--black);
+    background-color: var(--white);
+    border: none;
+    outline-width: 0;
+}
+.checkbox-input {
+    color: var(--black);
+    background-color: var(--white);
+    border: none;
+    outline-width: 0;
+}
+div[draggable-object] {
+    border: 1px solid silver;
+    border-radius: 3px;
+    box-shadow: 0 0 4px #afafaf;
+    width: fit-content;
+    padding: 10px;
+    position: fixed;
+    font-size: 20px;
+    cursor: move;
+    z-index: 9;
+}
+div[note-creator] {
+    border: 1px solid silver;
+    border-radius: 3px;
+    box-shadow: 0 0 4px #afafaf;
+    width: fit-content;
+    padding: 10px;
+    position: fixed;
+    font-size: 20px;
+    cursor: move;
+    z-index: 9;
+}
