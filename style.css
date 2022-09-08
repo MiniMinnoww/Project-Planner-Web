@@ -22,12 +22,25 @@ body {
     position: absolute;
     top: 60px;
 }
+.header {
+    color: var(--black);
+    position: absolute;
+    top: 120px;
+}
 
 .text-input {
     color: var(--black);
     background-color: var(--white);
     border: none;
     outline-width: 0;
+}
+.header-input {
+    color: var(--black);
+    border: none;
+    outline-width: 0;
+    background: none;
+    text-align: center;
+    font-weight: bold;
 }
 .checkbox-input {
     color: var(--black);

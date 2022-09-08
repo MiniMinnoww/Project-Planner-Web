@@ -1,4 +1,25 @@
 'use strict';
+
+var mouseDown = 0;
+var widgets = []
+
+document.onmousedown = function (evt) {
+    console.log(evt.button);
+    if (evt.button == 0) {
+        console.log("Down");
+        ++mouseDown;
+    }
+    
+}
+document.onmouseup = function (evt) {
+    console.log(evt.button);
+    if (evt.button == 0) {
+        console.log("Up");
+        --mouseDown;
+    }
+}
+
+
 function getDraggable(draggableObject) {
     // get all elements with the 'draggable-object' attribute
     var draggableObjects = [];
@@ -24,6 +45,7 @@ function getDraggable(draggableObject) {
         function enableDrag() {
             document.onmouseup = disableDrag;
             document.onmousemove = dragElement;
+            
 
             // get the offset amount for the first mouse press for every drag
             mouseOffsetX = getMouseOffset().X;
@@ -31,8 +53,12 @@ function getDraggable(draggableObject) {
         }
 
         function dragElement() {
+            if (!mouseDown) {
+                return;
+            }
             // get the window mouse co-ords
             var e = window.event;
+            
             e.preventDefault(); // get disables text highlighting during dragging
 
             var mouseX = e.clientX; // get mouse x/y
@@ -63,12 +89,10 @@ function getDraggable(draggableObject) {
         // enable dragging every time the mouse is pressed down
         // on the element
         obj.onmousedown = enableDrag;
+        enableDrag();
 
     });
 }
-
-
-document.body.onload = addNote;
 
 
 
@@ -77,57 +101,111 @@ document.body.onload = addNote;
 // Make them clickable
 document.getElementById("note-creator").onmousedown = function () {
     addNote();
-    return true; // Not needed, as long as you don't return false
+    return true;
 };
 
 document.getElementById("to-do-creator").onmousedown = function () {
     addToDo();
-    return true; // Not needed, as long as you don't return false
+    return true;
 };
 
+document.getElementById("header-creator").onmousedown = function () {
+    addHeader();
+    return true;
+};
+
+function saveAll() {
+    // Saves all widgets
+}
+
+// Classes for widgets
+class Widget {
+    loadData() { }
+    getSaveData() { }
+}
+class Note extends Widget {
+    constructor() {
+        super();
+
+        this.widget = document.createElement("div");
+        // and give it some content 
+        this.widget.className = "note";
+        this.widget.setAttribute("draggable-object", true);
+        this.input = document.createElement("input");
+        this.input.type = "text";
+        this.input.className = "text-input";
+
+        // add the text node to the newly created div
+        this.widget.appendChild(this.input);
+
+
+        // add the newly created element and its content into the DOM 
+        var currentDiv = document.getElementById("div1");
+        document.body.insertBefore(this.widget, currentDiv);
+
+        getDraggable(this.widget);
+    }
+    loadData() { }
+    getSaveData() { }
+}
+
+class ToDo extends Widget {
+    constructor() {
+        super();
+
+        // create a new div element 
+        this.widget = document.createElement("div");
+        // and give it some content 
+        this.widget.className = "to-do";
+        this.widget.setAttribute("draggable-object", true);
+        this.checkbox = document.createElement("input");
+        this.checkbox.type = "checkbox";
+        this.checkbox.className = "checkbox-input";
+
+        this.input = document.createElement("input");
+        this.input.type = "text";
+        this.input.className = "text-input";
+
+        // add the text node to the newly created div
+        this.widget.appendChild(this.checkbox);
+        this.widget.appendChild(this.input);
+
+
+        // add the newly created element and its content into the DOM 
+        var currentDiv = document.getElementById("div1");
+        document.body.insertBefore(this.widget, currentDiv);
+
+        getDraggable(this.widget);
+    }
+    loadData() { }
+    getSaveData() { }
+}
+
 function addNote() {
-    // create a new div element 
-    var newDiv = document.createElement("div");
-    // and give it some content 
-    newDiv.className = "note";
-    newDiv.setAttribute("draggable-object", true);
-    var input = document.createElement("input");
-    input.type = "text";
-    input.className = "text-input";
-
-    // add the text node to the newly created div
-    newDiv.appendChild(input);
-
-
-    // add the newly created element and its content into the DOM 
-    var currentDiv = document.getElementById("div1");
-    document.body.insertBefore(newDiv, currentDiv);
-
-    getDraggable(newDiv);
+    widgets.push(new Note());
 }
 
 function addToDo() {
-    // create a new div element 
-    var newDiv = document.createElement("div");
-    // and give it some content 
-    newDiv.className = "to-do";
-    newDiv.setAttribute("draggable-object", true);
-    var checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "checkbox-input";
+    widgets.push(new ToDo());
+}
 
+function addHeader() {
+
+    widgets.push(document.createElement("div"));
+
+    widgets[widgets.length - 1].className = "header";
+    widgets[widgets.length - 1].setAttribute("draggable-object", true);
     var input = document.createElement("input");
     input.type = "text";
-    input.className = "text-input";
+    input.className = "header-input";
 
     // add the text node to the newly created div
-    newDiv.appendChild(checkbox);
-    newDiv.appendChild(input);
+    widgets[widgets.length - 1].appendChild(input);
 
 
     // add the newly created element and its content into the DOM 
     var currentDiv = document.getElementById("div1");
-    document.body.insertBefore(newDiv, currentDiv);
+    document.body.insertBefore(widgets[widgets.length - 1], currentDiv);
 
-    getDraggable(newDiv);
+    getDraggable(widgets[widgets.length - 1]);
 }
